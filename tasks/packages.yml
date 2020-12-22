@@ -32,7 +32,6 @@
     dest: "{{ savePath }}"
     mode: 0755
   when:
-    - packageName is defined
     - ___package_src_stat.stat.exists == false
     - packageInstallWay == "network"
     - skipUnarchive is undefined
@@ -58,5 +57,6 @@
   when:
     - ___package_src_stat.stat.exists == false
     - packageInstallWay == "file"
+    - skipUnarchive is defined
     - skipUnarchive == true
   tags: [ packages, packages-upload ]
