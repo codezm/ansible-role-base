@@ -1,5 +1,6 @@
 galaxy_info:
   author: codezm
+  role_name: base
   description: web base
 
   license: license (BSD, MIT)
