@@ -1,9 +1,9 @@
 galaxy_info:
   author: codezm
-  role_name: base
-  description: web base
+  role_name: common
+  description: web common tasks
 
-  license: license (BSD, MIT)
+  license: license (MIT)
 
   min_ansible_version: 2.10
 

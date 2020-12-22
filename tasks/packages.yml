@@ -50,7 +50,7 @@
     - skipUnarchive is undefined
   tags: [ packages, packages-upload ]
 
-- name: "Copy and Unarchive package source code zip file: {{ packageName }}"
+- name: "Copy package source code file: {{ packageName }}"
   copy:
     src: "{{ packageName }}"
     dest: "{{ savePath }}"
