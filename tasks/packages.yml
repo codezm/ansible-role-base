@@ -1,0 +1,62 @@
+- name: "Check package source directory exists: {{ unpackName }}"
+  stat:
+    path: "{{ savePath }}{{ unpackName }}"
+  changed_when: false
+  register: ___package_src_stat
+  tags: [ packages, packages-download, packages-upload ]
+
+- name: "Check package zip file exists: {{ packageName }}"
+  stat:
+    path: "{{ savePath }}{{ packageName }}"
+  changed_when: false
+  register: ___package_zip_stat
+  when:
+    - ___package_src_stat.stat.exists == false
+  tags: [ packages, packages-download ]
+
+- name: "Download source package: {{ packageName }}"
+  get_url:
+    url: "{{ downloadUrl }}"
+    timeout: "{{ downloadTimeout }}"
+    dest: "{{ __package_tmp_save_dir }}"
+  when:
+    - ___package_src_stat.stat.exists == false
+    - ___package_zip_stat.stat.exists == false
+    - packageInstallWay == "network"
+  tags: [ packages, packages-download ]
+
+- name: "Unarchive package: {{ packageName }}"
+  unarchive:
+    copy: no
+    src: "{{ savePath }}{{ packageName }}"
+    dest: "{{ savePath }}"
+    mode: 0755
+  when:
+    - packageName is defined
+    - ___package_src_stat.stat.exists == false
+    - packageInstallWay == "network"
+    - skipUnarchive is undefined
+  tags: [ packages, packages-download ]
+
+- name: "Copy and Unarchive package source code zip file: {{ packageName }}"
+  unarchive:
+    src: "{{ packageName }}"
+    dest: "{{ savePath }}"
+    copy: yes
+    mode: 0755
+  when:
+    - ___package_src_stat.stat.exists == false
+    - packageInstallWay == "file"
+    - skipUnarchive is undefined
+  tags: [ packages, packages-upload ]
+
+- name: "Copy and Unarchive package source code zip file: {{ packageName }}"
+  copy:
+    src: "{{ packageName }}"
+    dest: "{{ savePath }}"
+    mode: 0755
+  when:
+    - ___package_src_stat.stat.exists == false
+    - packageInstallWay == "file"
+    - skipUnarchive == true
+  tags: [ packages, packages-upload ]

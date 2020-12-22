@@ -1,0 +1,16 @@
+# disable repo: epel、PowerTools
+- name: disable epel repo.
+  package:
+    name:
+      - epel-release
+    state: absent
+
+- name: disable PowerTools
+  command:
+    cmd: >
+      {{ item }}
+    warn: false
+  with_items:
+    - yum config-manager --set-disabled PowerTools
+    - yum clean all
+    - yum makecache

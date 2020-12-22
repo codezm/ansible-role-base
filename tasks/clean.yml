@@ -1,0 +1,6 @@
+---
+# 清理项目源代码目录、压缩文件.
+- name: "clean {{ name }}"
+  file:
+    path: "{{ path }}"
+    state: absent
