@@ -37,9 +37,29 @@
     - skipUnarchive is undefined
   tags: [ packages, packages-download ]
 
+- name: "Check sourcePath has file in local"
+  vars:
+   ansible_become: no
+  local_action: stat path={{ sourcePath }}/{{ packageName }}
+  register: __sourcePathCommand
+  when:
+    - sourcePath is defined
+    - ___package_src_stat.stat.exists == false
+    - packageInstallWay == "file"
+  tags: [ packages, packages-local-check ]
+
+- name: "Set sourcePath variable"
+  set_fact:
+    sourcePath: "{{ playbook_dir }}/files/"
+  when:
+    - ___package_src_stat.stat.exists == false
+    - packageInstallWay == "file"
+    - __sourcePathCommand.stat.exists == false
+  tags: [ packages, packages-local-check ]
+
 - name: "Copy and Unarchive package source code zip file: {{ packageName }}"
   unarchive:
-    src: "{{ packageName }}"
+    src: "{{ sourcePath }}{{ packageName }}"
     dest: "{{ savePath }}"
     copy: yes
     mode: 0755
@@ -51,7 +71,7 @@
 
 - name: "Copy package source code file: {{ packageName }}"
   copy:
-    src: "{{ packageName }}"
+    src: "{{ sourcePath }}{{ packageName }}"
     dest: "{{ savePath }}"
     mode: 0755
   when:
