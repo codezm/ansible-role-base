@@ -1,0 +1,20 @@
+# change yum repo to ustc
+- name: Change yum repo to ustc
+  shell: >
+    sed -e 's|^mirrorlist=|#mirrorlist=|g' \
+        -e 's|^#baseurl=http://mirror.centos.org/$contentdir|baseurl=https://mirrors.ustc.edu.cn/centos|g' \
+        -i.bak \
+        /etc/yum.repos.d/CentOS-Linux-AppStream.repo \
+        /etc/yum.repos.d/CentOS-Linux-BaseOS.repo \
+        /etc/yum.repos.d/CentOS-Linux-Extras.repo \
+        /etc/yum.repos.d/CentOS-Linux-PowerTools.repo \
+        /etc/yum.repos.d/CentOS-Linux-Plus.repo
+  when: ansible_distribution_major_version == "8"
+
+- name: Change yum repo to ustc
+  shell: >
+    sed -e 's|^mirrorlist=|#mirrorlist=|g' \
+         -e 's|^#baseurl=http://mirror.centos.org/centos|baseurl=https://mirrors.ustc.edu.cn/centos|g' \
+         -i.bak \
+         /etc/yum.repos.d/CentOS-Base.repo
+  when: ansible_distribution_major_version == "7"

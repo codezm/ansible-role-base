@@ -1,25 +1,25 @@
 # enable repo: epel、PowerTools
-- name: Check epel repo enabled
-  command:
-    cmd: dnf repolist enabled | grep epel
-    warn: false
-  changed_when: false
-  register: ___repo_result
+#- name: Check epel repo enabled
+  #command:
+    #cmd: yum repolist enabled | grep epel
+    #warn: false
+  #changed_when: false
+  #register: ___repo_result
 
 - name: enable epel repo.
   package:
     name:
       - epel-release
     state: present
-  when:
-    - ___repo_result.stdout == ""
+  #when:
+    #- ___repo_result.stdout == ""
 
-- name: Check PowerTools repo enabled
-  command:
-    cmd: dnf repolist enabled | grep PowerTools
-    warn: false
-  changed_when: false
-  register: ___repo_result
+#- name: Check PowerTools repo enabled
+  #command:
+    #cmd: yum repolist enabled | grep PowerTools
+    #warn: false
+  #changed_when: false
+  #register: ___repo_result
 
 - name: enable PowerTools repo.
   command:
@@ -28,7 +28,15 @@
     warn: false
   with_items:
     - yum config-manager --set-enabled PowerTools
+  when:
+    - ansible_distribution_major_version == "8"
+    #- ___repo_result.stdout == ""
+
+- name: yum clean
+  command:
+    cmd: >
+      {{ item }}
+    warn: false
+  with_items:
     - yum clean all
     - yum makecache
-  when:
-    - ___repo_result.stdout == ""

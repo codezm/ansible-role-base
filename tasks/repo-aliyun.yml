@@ -1,0 +1,4 @@
+# change yum repo to aliyun
+- name: Change yum repo to aliyun
+  shell: >
+    curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/{{ ansible_distribution | capitalize }}-{{ ansible_distribution_major_version }}.repo
